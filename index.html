@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Page Title</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		canvas {
+			border: 1px solid #ddd;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="canvas" width="640" height="480"></canvas>
+	<script>
+		var c = document.getElementById("canvas")
+		var ctx = c.getContext("2d")
+		var img = new Image()
+		var start_deck = []
+		var deck = []
+		var value_type = ["3", "4", "5", "6", "7", "8", "9", "J", "Q", "K", "A", "2"]
+		var rank_list = ["♠", "♣", "♦", "♥"]
+		var width = 40, height = 55
+		
+		img.src = "card.png";
+		img.onload = function() {
+			deck = startDeck()
+			start_deck = startDeck()
+			for(var i = 0; i < 200; i ++) {
+				sufferDeck(0, 48)
+			}
+			var team_1 = []
+			var team_2 = []
+			for(var i = 0; i < 13; i ++) {
+				team_1.push(deck[i])
+				team_2.push(deck[i + 13])
+			}
+			team_1 = team_1.sort((a, b) => {
+				return a.value - b.value
+			})
+			team_2 = team_2.sort((a, b) => {
+				return a.value - b.value
+			})
+			team_1.forEach((card, card_index) => {
+				card.x = card_index * 50 
+				card.y = 10
+				drawCard(value_type[card.value], rank_list[card.rank], card.rank, card.x, card.y)
+			})
+			team_2.forEach((card, card_index) => {
+				card.x = card_index * 50
+				card.y = 420
+				drawCard(value_type[card.value], rank_list[card.rank], card.rank, card.x, card.y)
+			})
+			canvas.addEventListener("click", function(e) {
+				var x = e.offsetX
+				var y = e.offsetY
+				for(var i = 0; i < 13; i ++) {
+					var card = team_2[i]
+					var ml = card.x, mr = card.x + width, mt = card.y, mb = card.y + height
+
+					if(x < mr && x > ml && y > mt && y < mb) {
+						break;
+					}					
+				}
+			})
+		}
+		function startDeck() {
+			var deck = []
+			var index = 0
+			for(var i = 0; i < 13; i ++) {
+				for(var j = 0; j < 4; j ++) {
+					deck.push({
+						value: i,
+						rank: j,
+						index: index
+					})
+					index ++
+				}
+			}
+			return deck
+		}
+		function sufferDeck(min, max) {
+			var x = Math.floor(Math.random() * (max - min) + min)
+			var y = Math.floor(Math.random() * (max - min) + min)
+			while(y == x) {
+				var y = Math.floor(Math.random() * (max - min) + min)
+			}
+			var temp = deck[x]
+			deck[x] = deck[y]
+			deck[y] = temp
+		}
+		/*
+		var card_value_list = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "J", "Q", "K"]
+		var rank_list = ["♠", "♣", "♦", "♥"]
+		var width = 40, height = 55, index = 0
+		var x = 0, y = 0
+		card_value_list.forEach((card_value, card_value_index) => {
+			if(!(card_value_index % 2)) {
+				y = card_value_index / 2 * height
+			}
+			else {				
+				y = Math.floor(card_value_index / 2) * height 
+			}
+
+			rank_list.forEach((rank, rank_index) => {
+				if(card_value_index % 2) {
+					x = (4 + rank_index) * width
+				}
+				else {
+					x = rank_index * width
+				}
+				drawCard(card_value, rank, rank_index, x, y)
+				index ++
+			})
+		})
+		*/
+		function drawCard(card_value, rank, rank_index, x, y) {
+			ctx.beginPath()
+			ctx.moveTo(x, y + 3)
+			ctx.lineTo(x, y + height - 3)
+			ctx.lineTo(x + 3, y + height)
+
+			//ctx.moveTo(card.x + 5, card.y + card.height)
+			ctx.lineTo(x + width - 3, y + height)
+			ctx.lineTo(x + width, y + height - 3)
+
+			//ctx.moveTo(card.x + card.width, card.y + card.height - 5)
+			ctx.lineTo(x + width, y + 3)
+			ctx.lineTo(x + width - 3, y)
+
+			//ctx.moveTo(card.x + card.width - 5, card.y)
+			ctx.lineTo(x + 3, y)
+			ctx.lineTo(x, y + 3)
+			ctx.stroke()
+			
+			if(rank_index > 1) {
+				ctx.fillStyle = "red";
+			}
+			else {
+				ctx.fillStyle = "black";
+			}
+			ctx.font = "15px monospace";
+			ctx.fillText(card_value, x + 2, y + 15);
+			ctx.font = "30px monospace";
+			ctx.fillText(rank, x + width - 20, y + height - 4);
+		}
+		/*var deck_card = new Image()
+		deck_card.src = canvas.toDataURL("image/png");
+		document.body.appendChild(deck_card)*/
+	</script>
+</body>
+</html>
