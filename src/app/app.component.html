@@ -1,0 +1,36 @@
+<h1>{{title}}</h1>
+<div *ngIf="action == 0">
+  <div>
+    <label>your id:
+      <input type="number" [(ngModel)]="id" placeholder="id"/>
+    </label>
+  </div>
+  <button (click)="setId()">set id</button>
+  <div>
+    <label>new room's name:
+      <input type="text" [(ngModel)]="name" placeholder="room name"/>
+    </label>
+  </div>
+  <button (click)="newRoom()">create</button>
+  <ul *ngIf="!room.loading">
+    <li *ngFor="let room of room.room_list">
+      <div>
+        <span>
+          {{room.player_number}}
+        </span>
+        {{room.name}}
+      </div>
+    </li>
+  </ul>
+</div>
+<div *ngIf="action == 1">
+  <app-play-card></app-play-card>
+</div>
+<p *ngIf="room.loading">
+  loading
+</p>
+<!-- <nav>
+  <a routerLink="/dashboard">Dashboard</a>
+  <a routerLink="/heroes">Heroes</a>
+</nav>
+<router-outlet></router-outlet> -->
