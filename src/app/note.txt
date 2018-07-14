@@ -1,0 +1,13 @@
+server client: angular
+  nodejs express: https://angular.io/guide/universal#the-example
+  back-end: php (asynch)
+Jummy:
+  first user is room master: set at room property
+    request card: check jummy, order (jummy, asc)
+    play a card: check if make a jummy (re-place card, order)
+    check if all have full position: check all jummy, calculate point => lowest is winner
+  
+first
+  redraw: new card
+  create new room, take part in a room
+  make a server/client play

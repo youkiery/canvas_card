@@ -1,0 +1,9 @@
+.play {
+  padding: 10px;
+  border: 1px solid #777;
+  background: #bbb;
+  width: fit-content;
+}
+canvas {
+  border: 1px solid #333;
+}
