@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CardService } from "../card.service"
-import { RoomService } from "../room.service"
+import { HttpService } from "../http.service"
 import { DrawImageService } from "../draw-image.service"
 import { Card } from '../card';
 
@@ -22,7 +22,7 @@ export class PlayCardComponent implements OnInit {
   last_winner: number
   player_number: number
   interval: any
-  room_id: number
+  @Input() room_id: number;
 
   current_play: {
     type: number,   // 0: single, 1: pair, 2: strain
@@ -33,7 +33,7 @@ export class PlayCardComponent implements OnInit {
     }
   }
   constructor(
-    private room: RoomService,
+    private http: HttpService,
     private card: CardService,
     private draw: DrawImageService
   ) { }
@@ -74,17 +74,31 @@ export class PlayCardComponent implements OnInit {
     }
   }
   order(cards) {
-    // từ danh sách bài truyền vào, trả về danh sách bài được sắp xếp theo thứ tự ưu tiên phỏm, bài từ thấp đến cao
+    console.log(this.room_id);
     
+    // từ danh sách bài truyền vào, trả về danh sách bài được sắp xếp theo thứ tự ưu tiên phỏm, bài từ thấp đến cao
   }
   getPlayingStatus() {
-    var url = this.room.url + "play_status.php?room_id="+ this.room_id;
-    this.room.fetch_url(url).then((data: any) => {
+    var url = this.http.url + "play_status.php?room_id=" + this.room_id;
+    this.http.fetch_url(url).then((data: any) => {
       switch(data.status) {
         case 1:
-          // existed, 
+          // existed, not playing
+          // refresh player
+          // if master, display start
+          this.refreshPlayer();
+          break;
+        case 2:
+          // existed, playing
+          // get current playing detail
+          break;
+        default:
+          // not existed
       }
     })
+  }
+  refreshPlayer() {
+
   }
   playAndRemove() {
     var selected = this.player[0].filter(card => {

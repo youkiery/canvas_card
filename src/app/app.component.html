@@ -12,8 +12,8 @@
     </label>
   </div>
   <button (click)="newRoom()">create</button>
-  <ul *ngIf="!room.loading">
-    <li *ngFor="let room of room.room_list">
+  <ul *ngIf="!loading">
+    <li *ngFor="let room of room_list">
       <div>
         <span>
           {{room.player_number}}
@@ -24,9 +24,9 @@
   </ul>
 </div>
 <div *ngIf="action == 1">
-  <app-play-card></app-play-card>
+  <app-play-card [room_id]="room_id"></app-play-card>
 </div>
-<p *ngIf="room.loading">
+<p *ngIf="loading">
   loading
 </p>
 <!-- <nav>
