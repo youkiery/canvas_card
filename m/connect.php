@@ -1,18 +1,35 @@
 <?php
-  include_once("config.php");
   class connection {
     public $conn;
     function __construct() {
-      try {
-        $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      }
-      catch(PDOException $e) {
-        echo "Connection failed: " . $e->getMessage();
-      }
+      include_once("config.php");
+      $this->conn = new mysqli($servername, $username, $password, $database);
     }
-    function insert_into($sql) {
-      $this->conn->exec($sql);
+    function check_connect() {
+      if($this->conn) {
+        return 1;
+      }
+      return 0;
+    }
+    function insert_into($sql, $lastid) {
+      $res = mysqli_query($this->conn, $sql);
+      if($res) {
+        if($lastid) {
+          return $this->conn->insert_id();
+        }
+        return 1;  
+      }
+      return 0;
+    }
+    function select_row($sql, $all) {
+      $res = mysqli_query($this->conn, $sql);
+      if($res && mysqli_num_rows($res)) {
+        if($all) {
+          return mysqli_fetch_all($res, MYSQLI_ASSOC);
+        }
+        return mysqli_fetch_assoc($res);
+      }
+      return 0;
     }
   }
 ?>
